@@ -9,10 +9,17 @@
 #include <time.h>
 #include <string.h>
 
+
+#ifdef __APPLE__
+#include <OpenGL/gl3.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <GL/glui.h>
 #include <GL/gl.h>
+#endif
 
 #include <IL/il.h> //TODO
 #include <IL/ilu.h>
