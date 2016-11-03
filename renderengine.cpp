@@ -1,7 +1,8 @@
 #include <random>
 #include "renderengine.h"
+#include <cmath>
 
-#define SAMPLE 1
+#define SAMPLE 2
 
 const Color RenderEngine::trace(const float i, const float j)
 {
@@ -32,7 +33,8 @@ bool RenderEngine::renderLoop()
 	if(++i == camera->getWidth())
 	{
 		i = 0;
-		return true;
+		camera->incSteps();
+		return false;
 	}
 	return false;
 }

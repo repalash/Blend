@@ -19,6 +19,7 @@ public:
 	double kd;//Diffuse constant
 	double ks;//Specular constant
 	double kr;//Contribution from reflection
+	double kg;//Glossy factor
 	double kt;//Contribution from refraction
 	double katt;//Attenuation factor
 	double eta;//Coefficient of refraction

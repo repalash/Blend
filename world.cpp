@@ -1,3 +1,4 @@
+#include <iostream>
 #include "world.h"
 
 using namespace std;
@@ -11,16 +12,18 @@ float World::firstIntersection(Ray& ray)
 
 Color World::shade_ray(Ray& ray)
 {
-	if(ray.getLevel() > MAX_LEVEL) return Color(0);
+	if(ray.getLevel() > MAX_LEVEL) return Color(ambient);
 	firstIntersection(ray);
-	if(ray.didHit())
-		return (ray.intersected())->shade(ray);
-	return ray.getLevel() > 0 ? 0 : background;
+	if(ray.didHit()) {
+		Color c = (ray.intersected())->shade(ray);
+			return c;
+	}
+	return background;
 }
 
 void World::addLight(LightSource* ls) {
 	Material *m = new Material(this); m->ka = 1; m->color = Color(ls->getIntensity());
-	Sphere *sphere = new Sphere(ls->getPosition(), 0.25, m);
+	Sphere *sphere = new Sphere(ls->getPosition(), 2, m);
 	sphere->setLightSource(ls);
 	lightSourceList.push_back(ls);
 	addObject(sphere);

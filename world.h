@@ -1,7 +1,7 @@
 #ifndef _WORLD_H_
 #define _WORLD_H_
 
-#define MAX_LEVEL 20
+#define MAX_LEVEL 3
 
 #include <vector>
 #include "object.h"

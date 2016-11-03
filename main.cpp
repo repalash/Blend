@@ -73,12 +73,14 @@ int init_resources(void)
 	Material *m = new Material(world);
 	m->color = Color(1, 1, 1); m->ka = 0.; m->kd = 0.1; m->ks = 0.8; m->katt = 0.005; m->kr = 0.1; m->n = 128; m->eta = 1.4; m->kt = 1;
 	Material *m2 = new Material(world);
-	m2->color = Color(1, 1, 1); m2->ka = 0.1; m2->kd = 1; m2->ks = 0.; m2->katt = 0.005; m2->kr = 0.; m2->n = 128; m2->kt = 0.; m2->eta = 1.75;
+	m2->color = Color(1, 1, 1); m2->ka = 0.1; m2->kd = 1; m2->ks = 0.; m2->katt = 0.005; m2->kr = 0.8; m2->n = 256; m2->kt = 0.; m2->eta = 1.75;
 	Material *m3 = new Material(world);
-	m3->color = Color(1, 0., 0.0); m3->ka = 0.2; m3->kd = 1; m3->ks = 0.1; m3->katt = 0.005; m3->kr = 0.; m3->n = 128; m3->kt = 0;
+	m3->color = Color(0.7, 1, 0.2); m3->ka = 0.2; m3->kd = 1; m3->ks = 0.1; m3->katt = 0.005; m3->kr = 0.2; m3->n = 128; m3->kt = 0;
 
 	Material *mPlane = new Material(world);
-	mPlane->color = Color(1, 1, 1); mPlane->kd = 0.9; mPlane->kr = 0.4; mPlane->katt = 0.003; mPlane->eta = 2;
+	mPlane->color = Color(1, 1, 1); mPlane->kd = 0.9; mPlane->kr = 0.6; mPlane->katt = 0.003; mPlane->eta = 2; mPlane->n = 32;
+	Material *mPlane2 = new Material(world);
+	mPlane2->color = Color(1, .1, .1); mPlane2->kd = 0.9; mPlane2->kr = 0.7; mPlane2->katt = 0.003; mPlane2->eta = 2; mPlane2->n = 64;
 
 	Object *sphere = new Sphere(Vector3D(4, 0, -10), 3, m3);
 	world->addObject(sphere);
@@ -86,7 +88,7 @@ int init_resources(void)
 	Object *sphere2 = new Sphere(Vector3D(-4, 0, -10), 3, m2);
 	world->addObject(sphere2);
 
-	Object *sphere3 = new Sphere(Vector3D(0, 0, -5), 4, m);
+	Object *sphere3 = new Sphere(Vector3D(1, 1, -5), 2.5, m);
 	world->addObject(sphere3);
 
 //	Object *sphere2 = new Sphere(Vector3D(2, 1.5, -5), 1.4, m2);
@@ -103,6 +105,11 @@ int init_resources(void)
 	Object *planeTriangle2 = new Triangle(Vector3D(-50, -5, 25), Vector3D(50, -5, -50), Vector3D(-50, -5, -50), mPlane);
 	world->addObject(planeTriangle2);
 
+	Object *planeTriangle3 = new Triangle(Vector3D(50, 25, -20), Vector3D(-50, 25, -20), Vector3D(50, -6, -20), mPlane2);
+	world->addObject(planeTriangle3);
+	Object *planeTriangle4 = new Triangle(Vector3D(50, -6, -20), Vector3D(-50, 25, -20), Vector3D(-50, -6, -20), mPlane2);
+	world->addObject(planeTriangle4);
+
 //	Object *planeTriangle3 = new Triangle(Vector3D(10, -10, 0), Vector3D(10, 10, 0), Vector3D(10, 10, -15), mPlane);
 //	world->addObject(planeTriangle3);
 //	Object *planeTriangle4 = new Triangle(Vector3D(10, -10, -15), Vector3D(10, -10, 0), Vector3D(10, 10, -15), mPlane);
@@ -112,13 +119,12 @@ int init_resources(void)
 	world->addLight(light);
 	LightSource *light2 = new PointLightSource(world, Vector3D(10, 10, -5), Color(1, 1, 1));
 	world->addLight(light2);
-	LightSource *light3 = new PointLightSource(world, Vector3D(-8, 0, 0), Color(0.2, 0, 0));
-	world->addLight(light3);
-	LightSource *light4 = new PointLightSource(world, Vector3D(0, 0, 0), Color(1, 1, 1));
-	world->addLight(light4);
-//	LightSource *light4 = new PointLightSource(world, Vector3D(6, 4, -8), Color(1, 1, 1));
-//	world->addLight(light4);
-
+//	LightSource *light3 = new PointLightSource(world, Vector3D(-8, 0, 0), Color(0.2, 0, 0));
+//	world->addLight(light3);
+	for (int i=0;i<0;i++) {
+		LightSource *light4 = new PointLightSource(world, Vector3D(0, 7, i-10), Color(.01, .1, .01));
+		world->addLight(light4);
+	}
 	engine = new RenderEngine(world, camera);
 
 	//Initialise texture
@@ -187,7 +193,6 @@ void SaveImage()  //TODO:
 	fprintf(stderr, "Image saved as: %s\n", imageName);
 }
 
-
 void onKey(unsigned char key, int x, int y)
 {
 	switch(key)
@@ -225,6 +230,7 @@ void onIdle(void)
 
 int main(int argc, char* argv[])
 {
+	srand((unsigned int) time(0));
 	if(argc > 1)
 	{
 		screen_width = atoi(argv[1]);
@@ -232,7 +238,7 @@ int main(int argc, char* argv[])
 		screen_width -= (screen_width % 2); //Make it even
 		screen_height -= (screen_height % 2); //Make it even
 	}
-	fprintf(stderr, "Welcome to Lumina raytracer.\nFull command: %s [width] [height]\nPress 's' to save framebufer to disk.\n", argv[0]);
+	fprintf(stderr, "Welcome to Blend raytracer and editor.\nFull command: %s [width] [height]\nPress 's' to save framebufer to disk.\n", argv[0]);
 	/* Glut-related initialising functions */
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);

@@ -19,7 +19,6 @@ public:
 		Object(mat), position(_pos), radius(_rad)
 	{
 		isSolid = true;
-		lightSource = nullptr;
 	}
 	
 	virtual bool intersect(Ray& r) const;

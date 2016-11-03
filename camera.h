@@ -20,6 +20,7 @@ private:
 	float focalDistance; //Distance from camera center to the image plane
 	float focalWidth, focalHeight;//width and height of focal plane
 	float aspect;
+	int steps;
 
 public:
 	Camera(const Vector3D& _pos, const Vector3D& _target, const Vector3D& _up, float fovy, int w, int h);
@@ -30,6 +31,8 @@ public:
 	unsigned char * getBitmap() {return bitmap; }
 	int getWidth() {return width;}
 	int getHeight(){return height;}
+	void incSteps(){ steps++; }
+	void resetSteps(){ steps=0; }
 
 };
 #endif

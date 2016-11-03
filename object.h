@@ -16,7 +16,9 @@ protected:
 	LightSource* lightSource;
 
 public:
-	Object(Material *mat): material(mat) {}	
+	Object(Material *mat): material(mat) {
+		lightSource = nullptr;
+	}
 	virtual bool intersect(Ray& ray) const = 0;
 	virtual Color shade(const Ray& ray) const
 	{

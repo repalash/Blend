@@ -2,19 +2,46 @@
 #include "world.h"
 #include "material.h"
 #include <iostream>
+#include <cmath>
+#include <random>
+
+Vector3D randomRotate(Vector3D vector, float angle){
+	angle = (rand()%360)*angle/180-angle; angle = angle*M_PI/180;
+	Vector3D randVector(1+(rand()%100), 1+(rand()%100), 1+(rand()%100));
+	Vector3D k = crossProduct(randVector, vector);
+	return Vector3D(vector*cos(angle) + crossProduct(k, vector)*sin(angle) + k*dotProduct(k, vector)*(1-cos(angle))); //Rodrigue's rotation formula
+}
+
 Color Material::shade(const Ray& incident, const bool isSolid) const
 {
 	if(!incident.didHit()) return world->getBackground();
+	if(incident.intersected()->isLightSource()) return incident.intersected()->getLightSource()->getIntensity();
 	const std::vector<LightSource *> &lights = world->getLightSourceList();
 	Color finalColor(ka*world->getAmbient()*color);
 	double cosTheta = dotProduct(incident.getDirection(), incident.getNormal());
 	bool isInside = cosTheta > 0;
 	if(isInside) cosTheta = dotProduct(incident.getDirection(), -incident.getNormal());
-	Ray reflectedRay = Ray(incident.getPosition(), incident.getDirection() - 2 * incident.getNormal() * cosTheta, incident.getLevel() + 1);
-	Color reflectedColor = world->shade_ray(reflectedRay);
 
+	float lobe = 1;//(float) (kr * kr);
+	Vector3D rDirection = incident.getDirection() - 2 * incident.getNormal() * cosTheta;
+	Ray reflectedRay = Ray(incident.getPosition(), rDirection, incident.getLevel() + 1);
+	Color reflectedColor(0);
+	float wtSum = 0;
+	//if(rand()%3)
+	{
+		reflectedColor = lobe*world->shade_ray(reflectedRay); wtSum = lobe;
+	}
+	for(int i=0;i<kr*0;i++) {
+		Vector3D randDirection = randomRotate(incident.getNormal(), 45);
+		lobe = (float) pow(std::max(dotProduct(randDirection, incident.getNormal()), 0.), n);
+		Ray _reflectedRay = Ray(incident.getPosition(), randDirection,
+		                        incident.getLevel() + 1);
+		reflectedColor = reflectedColor + lobe*world->shade_ray(_reflectedRay);
+		wtSum += lobe;
+	}
+	reflectedColor = reflectedColor / wtSum;
 	double reflectance = pow((eta-1)/(eta+1), 2);
-	double schlickApp = reflectance + (1 - reflectance) * pow(1 + cosTheta, 5);
+	double schlickApp = reflectance + (1 - reflectance) * pow(1 + cosTheta, 1);
 	if(isSolid && kt && eta && incident.getLevel() < MAX_LEVEL){ //Do refraction
 		double currentEta = isInside?1:eta;
 		Vector3D direction = incident.getRefractive_index() * (incident.getDirection() - incident.getNormal()*cosTheta) / currentEta;
@@ -29,11 +56,14 @@ Color Material::shade(const Ray& incident, const bool isSolid) const
 			beerK.g = exp(-color.g*t);
 			beerK.b = exp(-color.b*t);
 		}
-		finalColor = finalColor + ((kr + schlickApp) * reflectedColor + beerK * kt * world->shade_ray(refractedRay));
+		finalColor = finalColor + ((kr * schlickApp) * reflectedColor + beerK * kt * world->shade_ray(refractedRay));
 	}else {
-		finalColor = finalColor + (kr * schlickApp) * reflectedColor;
+		finalColor = finalColor + (kr + schlickApp) * reflectedColor;
 	}
+	finalColor.clamp();
+	finalColor = finalColor * color;
 	Color myColor = color + finalColor;
+	myColor.clamp();
 	for(int i=0; i<lights.size(); i++){
 		LightSource* light = lights[i];
 		Vector3D l = incident.getPosition() - light->getPosition();
