@@ -33,6 +33,8 @@ public:
 	int getHeight(){return height;}
 	void incSteps(){ steps++; }
 	void resetSteps(){ steps=0; }
-
+	int getSteps() const {
+		return steps;
+	}
 };
 #endif

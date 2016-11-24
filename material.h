@@ -18,7 +18,7 @@ public:
 	double ka;//Ambient contribution
 	double kd;//Diffuse constant
 	double ks;//Specular constant
-	double kr;//Contribution from reflection
+	double kr;//Contribution from reflection, reflectivity
 	double kg;//Glossy factor
 	double kt;//Contribution from refraction
 	double katt;//Attenuation factor

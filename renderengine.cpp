@@ -1,8 +1,9 @@
 #include <random>
 #include "renderengine.h"
 #include <cmath>
+#include <iostream>
 
-#define SAMPLE 2
+#define SAMPLE 8
 
 const Color RenderEngine::trace(const float i, const float j)
 {
@@ -17,6 +18,7 @@ bool RenderEngine::renderLoop()
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<> dis(0, 1);
+#pragma omp parallel for schedule(dynamic, 5)
 	for(int j = 0; j<camera->getHeight(); j++)
 	{
 		Color color(0);
@@ -34,6 +36,7 @@ bool RenderEngine::renderLoop()
 	{
 		i = 0;
 		camera->incSteps();
+		std::cout<<"Samples Done: "<<camera->getSteps()*SAMPLE*SAMPLE<<std::endl;
 		return false;
 	}
 	return false;

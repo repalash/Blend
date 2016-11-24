@@ -15,23 +15,72 @@ Vector3D randomRotate(Vector3D vector, float angle){
 Color Material::shade(const Ray& incident, const bool isSolid) const
 {
 	if(!incident.didHit()) return world->getBackground();
-	if(incident.intersected()->isLightSource()) return incident.intersected()->getLightSource()->getIntensity();
-	const std::vector<LightSource *> &lights = world->getLightSourceList();
-	Color finalColor(ka*world->getAmbient()*color);
+
+	if(incident.intersected()->isLightSource() &&
+	   rand()<RAND_MAX*incident.intersected()->getLightSource()->getIntensity().maxComponent())  //randomly determine to emit light
+		return 2*incident.intersected()->getLightSource()->getIntensity();
+
+	Color finalColor(color);
+
 	double cosTheta = dotProduct(incident.getDirection(), incident.getNormal());
+	Vector3D rDirection;
+
+	if(kt>0){
+		//material is dielectric
+		rDirection = incident.getDirection() - 2 * incident.getNormal() * cosTheta;
+		Ray reflectedRay = Ray(incident.getPosition(), rDirection, incident.getLevel() + 1);  //Ideal reflection
+		bool isInside = cosTheta > 0;
+		double nc=1, nnt=isInside?eta/nc:nc/eta;
+		double cos2t = 1-nnt*nnt*(1-cosTheta*cosTheta);
+		if (cos2t<0){ //TIR
+			return finalColor*world->shade_ray(reflectedRay);
+		}else{
+			cosTheta = -fabs(cosTheta);
+			Vector3D tDirection = (incident.getDirection()*nnt - incident.getNormal()*((isInside?-1:1)*(cosTheta*nnt+sqrt(cos2t))));
+			Ray refractedRay = Ray(incident.getPosition(), tDirection, incident.getLevel()+1);
+
+			double a=eta-nc, b=eta+nc, R0=a*a/(b*b), c = 1-(isInside?dotProduct(tDirection, incident.getNormal()):-cosTheta);
+			double Re=R0+(1-R0)*c*c*c*c*c,Tr=1-Re,P=.25+.5*Re,RP=Re/P,TP=Tr/(1-P);
+
+			if(incident.getLevel()>2)
+				if (1.0 * rand() / RAND_MAX < P) return finalColor * world->shade_ray(reflectedRay) * RP;
+				else return finalColor * world->shade_ray(refractedRay) * TP;
+			return finalColor * (world->shade_ray(reflectedRay)*Re + world->shade_ray(refractedRay)*Tr);
+		}
+	}
+	else if(rand()>RAND_MAX*kr){ //kr=1 means completely reflective
+		//do diffuse, Lambertian sampling
+		double alpha=2*M_PI*rand()/RAND_MAX,
+				z=1.0*rand()/RAND_MAX, _cosTheta=sqrt(z), _sineTheta = sqrt(1-z);
+
+		//generate basis
+		Vector3D w=incident.getNormal();
+		Vector3D u=(crossProduct((fabs(w.X())>.1?Vector3D(0,1,0):Vector3D(1,0,0)),w));
+		u.normalize();
+		Vector3D v=crossProduct(w,u);
+		rDirection = u*cos(alpha)*_sineTheta + v*sin(alpha)*_sineTheta + w*_cosTheta ;
+	}else{
+		//do specular
+		rDirection = incident.getDirection() - 2 * incident.getNormal() * cosTheta;
+	}
+	rDirection.normalize();
+	Ray reflectedRay = Ray(incident.getPosition(), rDirection, incident.getLevel() + 1);  //Ideal reflection
+	finalColor = finalColor*world->shade_ray(reflectedRay);
+	return finalColor;
+
+	const std::vector<LightSource *> &lights = world->getLightSourceList();
 	bool isInside = cosTheta > 0;
 	if(isInside) cosTheta = dotProduct(incident.getDirection(), -incident.getNormal());
 
-	float lobe = 1;//(float) (kr * kr);
-	Vector3D rDirection = incident.getDirection() - 2 * incident.getNormal() * cosTheta;
-	Ray reflectedRay = Ray(incident.getPosition(), rDirection, incident.getLevel() + 1);
+	float lobe = (float) (kr * kr);
 	Color reflectedColor(0);
 	float wtSum = 0;
-	//if(rand()%3)
+
+	if(rand()%3)
 	{
 		reflectedColor = lobe*world->shade_ray(reflectedRay); wtSum = lobe;
 	}
-	for(int i=0;i<kr*0;i++) {
+	for(int i=0;i<kr*4;i++) {
 		Vector3D randDirection = randomRotate(incident.getNormal(), 45);
 		lobe = (float) pow(std::max(dotProduct(randDirection, incident.getNormal()), 0.), n);
 		Ray _reflectedRay = Ray(incident.getPosition(), randDirection,
