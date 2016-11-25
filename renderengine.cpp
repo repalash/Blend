@@ -3,7 +3,7 @@
 #include <cmath>
 #include <iostream>
 
-#define SAMPLE 8
+#define SAMPLE 16
 
 const Color RenderEngine::trace(const float i, const float j)
 {
@@ -15,16 +15,13 @@ const Color RenderEngine::trace(const float i, const float j)
 bool RenderEngine::renderLoop()
 {
 	static int i = 0;
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution<> dis(0, 1);
 #pragma omp parallel for schedule(dynamic, 5)
 	for(int j = 0; j<camera->getHeight(); j++)
 	{
 		Color color(0);
 		for(int p =0; p<SAMPLE; p++){
 			for(int q=0; q<SAMPLE; q++){
-				color = color + trace((const float) (i + (p + dis(gen)) / SAMPLE), (const float) (j + (q + dis(gen)) / SAMPLE));
+				color = color + trace((const float) (i + (p + xorshf96()) / SAMPLE), (const float) (j + (q + xorshf96()) / SAMPLE));
 			}
 		}
 		color = color / (SAMPLE*SAMPLE);

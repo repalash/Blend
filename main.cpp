@@ -60,8 +60,8 @@ int init_resources(void)
 	}
 
 	//Initialize raytracer objects
-	Vector3D camera_position(0, 0, 10);
-	Vector3D camera_target(0, 0, 0); //Looking down -Z axis
+	Vector3D camera_position(0, 4, 17);
+	Vector3D camera_target(0,0,0); //Looking down -Z axis
 	Vector3D camera_up(0, 1, 0);
 	float camera_fovy =  45;
 	camera = new Camera(camera_position, camera_target, camera_up, camera_fovy, screen_width, screen_height);
@@ -71,11 +71,13 @@ int init_resources(void)
 	world->setBackground(Color(0, 0, 0));
 
 	Material *m = new Material(world); //diffuse red
-	m->color = Color(0.75, 0.25, 0.1); m->ka = 0.; m->kd = 0; m->ks = 0.8; m->katt = 0.005; m->kr = 0.01; m->n = 128; m->eta = 1.5; m->kt = 0;
+	m->color = Color(1, 0.25, 0); m->ka = 0.; m->kd = 0; m->ks = 0.8; m->katt = 0.005; m->kr = 0; m->n = 128; m->eta = 1.5; m->kt = 0;
 	Material *m2 = new Material(world); //specular
-	m2->color = Color(1, 1, 1); m2->ka = 0.1; m2->kd = 1; m2->ks = 0.; m2->katt = 0.005; m2->kr = 1; m2->n = 256; m2->kt = 0; m2->eta = 1.4;
+	m2->color = Color(1, 0.65, 0); m2->ka = 0.1; m2->kd = 1; m2->ks = 0.; m2->katt = 0.005; m2->kr = 0.999; m2->n = 256; m2->kt = 0; m2->eta = 1.4;
 	Material *m3 = new Material(world); //dielectric
-	m3->color = Color(1, 1, 1); m3->ka = 0.2; m3->kd = 1; m3->ks = 0.1; m3->katt = 0.005; m3->kr = 0.2; m3->n = 128; m3->kt = 1;
+	m3->color = Color(1, 1, 1); m3->ka = 0.2; m3->kd = 1; m3->ks = 0.1; m3->katt = 0.005; m3->kr = 0.2; m3->n = 128; m3->kt = 1; m3->eta = 1.33;
+	Material *m4 = new Material(world); //glossy white
+	m4->color = Color(1, 1, 1);  m4->n = 8;
 
 	Material *mPlane = new Material(world);
 	mPlane->color = Color(0.25, 0.75, 0.25); mPlane->kr = 0;
@@ -84,7 +86,7 @@ int init_resources(void)
 	Material *mPlane3 = new Material(world);
 	mPlane3->color = Color(0.75, 0.25, 0.25); mPlane3->kr = 0;
 	Material *mPlane4 = new Material(world);
-	mPlane4->color = Color(0.55, 0.55, 0.55); mPlane4->kr = 0;
+	mPlane4->color = Color(0.67, 0.67, 0.67); mPlane4->kr = 0;
 
 //	world->addObject(new Sphere(Vector3D( 1e5+1,40.8,81.6), 1e5, m));
 //	world->addObject(new Sphere(Vector3D(-1e5+99,40.8,81.6), 1e5, m));
@@ -100,50 +102,63 @@ int init_resources(void)
 //	Object *sphere = new Sphere(Vector3D(2, -1, -6), 3, m);
 //	world->addObject(sphere);
 //
-	Object *sphere2 = new Sphere(Vector3D(0, -2, -6), 2, m2);
-	world->addObject(sphere2);
+//	Object *sphere2 = new Sphere(Vector3D(2, -2, -3), 3, m3);
+//	world->addObject(sphere2);
 //
-//	Object *sphere3 = new Sphere(Vector3D(1, 1, -5), 2.5, m);
+//	Object *sphere4 = new Sphere(Vector3D(-1, -2, -12), 3, m4);
+//	world->addObject(sphere4);
+//
+//	Object *sphere3 = new Sphere(Vector3D(-2, -3.5, -5), 1.5, m2);
 //	world->addObject(sphere3);
 
 //	Object *sphere2 = new Sphere(Vector3D(2, 1.5, -5), 1.4, m2);
 //	world->addObject(sphere2);
 
-//	Object *quadric = new Quadric(1, 0, 1, 0, 0, 0, 0, 4, 0, -1, mPlane2);
-//	world->addObject(quadric);
+	Object *quadric = new Quadric(0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, false, m2);
+	Object *quadric2 = new Quadric(0.099, 0, 0.099, 0, 0, 0, 0, 0, 0, -1, true, m2);
+	world->addObject(quadric);
+	world->addObject(quadric2);
+//	Object *quadric2 = new Quadric(0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, m2);
+//	world->addObject(quadric2);
 
 //	Object *triangle = new Triangle(Vector3D(0, 10, -15), Vector3D(-8, 0, -18), Vector3D(8, 0, -18), m3);
 //	world->addObject(triangle);
 
-	Object *planeTriangle1 = new Triangle(Vector3D(-50, -5, 25), Vector3D(50, -5, 25), Vector3D(50, -5, -50), mPlane);
+	Object *planeTriangle1 = new Triangle(Vector3D(-50, -5, 25), Vector3D(50, -5, 25), Vector3D(50, -5, -50), mPlane4);
 	world->addObject(planeTriangle1);
-	Object *planeTriangle2 = new Triangle(Vector3D(-50, -5, 25), Vector3D(50, -5, -50), Vector3D(-50, -5, -50), mPlane);
+	Object *planeTriangle2 = new Triangle(Vector3D(-50, -5, 25), Vector3D(50, -5, -50), Vector3D(-50, -5, -50), mPlane4);
 	world->addObject(planeTriangle2);
 //
-	Object *planeTriangle3 = new Triangle(Vector3D(50, 25, -20), Vector3D(-50, 25, -20), Vector3D(50, -6, -20), mPlane2);
+	Object *planeTriangle3 = new Triangle(Vector3D(50, 25, -10), Vector3D(-50, 25, -10), Vector3D(50, -6, -10), mPlane2);
 	world->addObject(planeTriangle3);
-	Object *planeTriangle4 = new Triangle(Vector3D(50, -6, -20), Vector3D(-50, 25, -20), Vector3D(-50, -6, -20), mPlane2);
+	Object *planeTriangle4 = new Triangle(Vector3D(50, -6, -10), Vector3D(-50, 25, -10), Vector3D(-50, -6, -10), mPlane2);
 	world->addObject(planeTriangle4);
 //
-	Object *planeTriangle5 = new Triangle(Vector3D(6, -10, 0), Vector3D(6, 10, 0), Vector3D(6, 10, -15), mPlane3);
+	Object *planeTriangle5 = new Triangle(Vector3D(6, -10, 20), Vector3D(6, 10, 20), Vector3D(6, 10, -20), mPlane3);
 	world->addObject(planeTriangle5);
-	Object *planeTriangle6 = new Triangle(Vector3D(6, -10, -15), Vector3D(6, -10, 0), Vector3D(6, 10, -15), mPlane3);
+	Object *planeTriangle6 = new Triangle(Vector3D(6, -10, -20), Vector3D(6, -10, 20), Vector3D(6, 10, -20), mPlane3);
 	world->addObject(planeTriangle6);
 
-	Object *planeTriangle7 = new Triangle(Vector3D(-6, 10, 0), Vector3D(-6, -10, 0), Vector3D(-6, 10, -15), mPlane4);
+	Object *planeTriangle7 = new Triangle(Vector3D(-6, 10, 20), Vector3D(-6, -10, 20), Vector3D(-6, 10, -20), mPlane);
 	world->addObject(planeTriangle7);
-	Object *planeTriangle8 = new Triangle(Vector3D(-6, -10, 0), Vector3D(-6, -10, -15), Vector3D(-6, 10, -15), mPlane4);
+	Object *planeTriangle8 = new Triangle(Vector3D(-6, -10, 20), Vector3D(-6, -10, -20), Vector3D(-6, 10, -20), mPlane);
 	world->addObject(planeTriangle8);
 
-	LightSource *light = new PointLightSource(world, Vector3D(-4, 500, -10), Color(1, 1, 1));
+//	Object *planeTriangle9 = new Triangle(Vector3D(50, 5, 25), Vector3D(-50, 5, 25), Vector3D(50, 5, -50), mPlane4);
+//	world->addObject(planeTriangle9);
+//	Object *planeTriangle10 = new Triangle(Vector3D(50, 5, -50), Vector3D(-50, 5, 25), Vector3D(-50, 5, -50), mPlane4);
+//	world->addObject(planeTriangle10);
+
+	LightSource *light = new PointLightSource(world, Vector3D(-5, 3, 15), Color(20, 20, 20));
 	world->addLight(light);
 
-//	LightSource *light2 = new PointLightSource(world, Vector3D(10, 10, -5), Color(1, 1, 1));
+//	LightSource *light2 = new PointLightSource(world, Vector3D(0, 10, 10), Color(20, 20, 20));
 //	world->addLight(light2);
+
 //	LightSource *light3 = new PointLightSource(world, Vector3D(-8, 0, 0), Color(0.2, 0, 0));
 //	world->addLight(light3);
 	for (int i=0;i<0;i++) {
-		LightSource *light4 = new PointLightSource(world, Vector3D(0, 7, i-10), Color(.01, .1, .01));
+		LightSource *light4 = new PointLightSource(world, Vector3D(2*(i-4), 4, -10), Color(12, 12, 25));
 		world->addLight(light4);
 	}
 	engine = new RenderEngine(world, camera);

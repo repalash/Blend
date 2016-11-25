@@ -17,7 +17,7 @@ bool Quadric::intersect(Ray &r) const {
 			double t;
 			t = -b/(2.0*a);
 			Vector3D p = r.getOrigin() + t*r.getDirection();
-			r.setParameter(t, this, Vector3D(2*A*p[0] + D*p[1] + E*p[2] + G, 2*B*p[1] + D*p[0] + F*p[2] + H, 2*C*p[2] + E*p[0] + F*p[1] + I));
+			if(p.Y()<-4)r.setParameter(t, this, (out?1:-1)*Vector3D(2*A*p[0] + D*p[1] + E*p[2] + G, 2*B*p[1] + D*p[0] + F*p[2] + H, 2*C*p[2] + E*p[0] + F*p[1] + I));
 			return true;
 		}
 		else
@@ -28,9 +28,9 @@ bool Quadric::intersect(Ray &r) const {
 			double t2 = (-b -D)/(2.0*a);
 
 			Vector3D p = r.getOrigin() + t1*r.getDirection();
-			bool b1 = r.setParameter(t1, this, Vector3D(2*A*p[0], 2*B*p[1], 2*C*p[2]));
+			bool b1 = p.Y()<-4&&r.setParameter(t1, this, (out?1:-1)*Vector3D(2*A*p[0], 2*B*p[1], 2*C*p[2]));
 			p = r.getOrigin() + t2*r.getDirection();
-			bool b2 = r.setParameter(t2, this, Vector3D(2*A*p[0], 2*B*p[1], 2*C*p[2]));
+			bool b2 = p.Y()<-4&&r.setParameter(t2, this, (out?1:-1)*Vector3D(2*A*p[0], 2*B*p[1], 2*C*p[2]));
 			return b1||b2;
 		}
 	}
