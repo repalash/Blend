@@ -28,10 +28,11 @@ public:
 	void setAmbient(const Color& amb) {ambient = amb;}
 	Color getAmbient() {return ambient;}
 
-	void addLight(LightSource* ls);
+	void addLight(Object* ls);
 	void addObject(Object *obj)
 	{
 		objectList.push_back(obj);
+		addLight(obj);
 	}
 	float firstIntersection(Ray& ray);
 	Color shade_ray(Ray& ray);

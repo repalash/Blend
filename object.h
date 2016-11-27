@@ -24,7 +24,9 @@ public:
 	{
 		return material->shade(ray, isSolid);
 	}
-	void setLightSource(LightSource *ls){ lightSource = ls; }
+	virtual void setLightSource(Color color){
+		lightSource = new PointLightSource(world, Vector3D(0,0,0), color);
+	};
 	bool isLightSource() const { return lightSource!=nullptr; };
 	const LightSource* getLightSource() const { return lightSource; };
 };

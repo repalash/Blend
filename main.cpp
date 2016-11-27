@@ -158,18 +158,15 @@ int init_resources(void)
 //	Object *planeTriangle10 = new Triangle(Vector3D(50, 5, -50), Vector3D(-50, 5, 25), Vector3D(-50, 5, -50), mPlane4);
 //	world->addObject(planeTriangle10);
 
-	LightSource *light = new PointLightSource(world, Vector3D(0, 20, 10), Color(20, 20, 20));
-	world->addLight(light);
+	Sphere *light = new Sphere(Vector3D(0, 20, 10), 4, m);
+	light->setLightSource(Color(10,10,10));
+	world->addObject(light);
 
 //	LightSource *light2 = new PointLightSource(world, Vector3D(0, 10, 10), Color(20, 20, 20));
 //	world->addLight(light2);
 
 //	LightSource *light3 = new PointLightSource(world, Vector3D(-8, 0, 0), Color(0.2, 0, 0));
 //	world->addLight(light3);
-	for (int i=0;i<0;i++) {
-		LightSource *light4 = new PointLightSource(world, Vector3D(2*(i-4), 4, -10), Color(12, 12, 25));
-		world->addLight(light4);
-	}
 	engine = new RenderEngine(world, camera);
 
 	//Initialise texture

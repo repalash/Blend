@@ -21,10 +21,7 @@ Color World::shade_ray(Ray& ray)
 	return background;
 }
 
-void World::addLight(LightSource* ls) {
-	Material *m = new Material(this); m->ka = 1; m->color = Color(ls->getIntensity());
-	Sphere *sphere = new Sphere(ls->getPosition(), 8, m);
-	sphere->setLightSource(ls);
-	lightSourceList.push_back(ls);
-	addObject(sphere);
+void World::addLight(Object* ls) {
+	if(!ls->isLightSource()) return;
+	lightSourceList.push_back((LightSource *const &) ls->getLightSource());
 }

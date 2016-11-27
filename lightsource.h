@@ -13,6 +13,7 @@ public:
 	LightSource(World *_world, const Color _intensity):
 		world(_world), intensity(_intensity)   {}
 	virtual Vector3D getPosition() const = 0;
+	virtual void setPosition(Vector3D pos) const = 0;
 	Color getIntensity() const {return intensity; }
 
 };

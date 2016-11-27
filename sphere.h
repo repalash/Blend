@@ -22,5 +22,11 @@ public:
 	}
 	
 	virtual bool intersect(Ray& r) const;
+
+	virtual void setLightSource(Color color) override {
+		Object::setLightSource(color);
+		lightSource->setPosition(position);
+	}
+
 };
 #endif
