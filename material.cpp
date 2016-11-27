@@ -58,7 +58,7 @@ Color Material::shade(const Ray& incident, const bool isSolid) const
 			double a=eta-nc, b=eta+nc, R0=a*a/(b*b), c = 1-(isInside?dotProduct(tDirection, incident.getNormal()):-cosTheta);
 			double Re=R0+(1-R0)*c*c*c*c*c,Tr=1-Re,P=.25+.5*Re,RP=Re/P,TP=Tr/(1-P);
 
-			if(incident.getLevel()>3)
+			if(incident.getLevel()>1)
 				if (xorshf96() < P) return finalColor * world->shade_ray(reflectedRay) * RP;
 				else return finalColor * world->shade_ray(refractedRay) * TP;
 			return finalColor * (world->shade_ray(reflectedRay)*Re + world->shade_ray(refractedRay)*Tr);
