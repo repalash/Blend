@@ -37,7 +37,7 @@ public:
 		objectList.push_back(obj);
 		addLight(obj);
 	}
-	Object * firstIntersection(Ray& ray);
+	float firstIntersection(Ray& ray);
 	int findIntersection(Ray& r1);
 	Color shade_ray(Ray& ray);
 	const std::vector<LightSource *> &getLightSourceList() const { return lightSourceList; }

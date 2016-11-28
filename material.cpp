@@ -98,6 +98,4 @@ Color Material::shade(const Ray& incident, const bool isSolid) const
 		//do specular
 		return finalColor*world->shade_ray(reflectedRay);
 	}
-	return finalColor;
-
 }

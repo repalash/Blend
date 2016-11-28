@@ -197,9 +197,9 @@ int init_resources(void)
 //	Object *quadric2 = new Quadric(0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, m2);
 //	world->addObject(quadric2);
 
-	Object *quadric3 = new Quadric(0.3, 0, 0.3, 0, 0, 0, 0, 0, 0, -1, false, m5);
+	Object *quadric3 = new Quadric(Vector3D(0,0,0), 0.3, 0, 0.3, 0, 0, 0, 0, 0, 0, -1, false, m5);
 	world->addObject(quadric3);
-	Object *quadric4 = new Quadric(0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, true, m5);
+	Object *quadric4 = new Quadric(Vector3D(0,0,0), 0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, true, m5);
 	world->addObject(quadric4);
 
 //	Object *triangle = new Triangle(Vector3D(0, 10, -15), Vector3D(-8, 0, -18), Vector3D(8, 0, -18), m3);
@@ -238,7 +238,6 @@ int init_resources(void)
 
 //	LightSource *light3 = new PointLightSource(world, Vector3D(-8, 0, 0), Color(0.2, 0, 0));
 //	world->addLight(light3);
-	engine = new RenderEngine(world, camera);
 
 
 	setupLightPosition(world->getLightSourceList());
