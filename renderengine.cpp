@@ -1,7 +1,7 @@
 #include <random>
 #include "renderengine.h"
-
-#define SAMPLE 1
+#include <iostream>
+using namespace std;
 
 const Color RenderEngine::trace(const float i, const float j)
 {
@@ -28,11 +28,29 @@ bool RenderEngine::renderLoop()
 		color.clamp();
 		camera->drawPixel(i, j, color);
 	}
-
 	if(++i == camera->getWidth())
 	{
 		i = 0;
 		return true;
 	}
 	return false;
+}
+
+void RenderEngine::renderObjects(GLint vVertex_attrib, GLint vColor_attrib, GLint vNormal_attrib) {
+	world->drawObjects(vVertex_attrib, vColor_attrib, vNormal_attrib);
+}
+
+pair <int, float> RenderEngine::checkIntersect(Vector3D e, Vector3D s) {
+	Ray r1(e, s-e);
+	return make_pair(world->findIntersection(r1), r1.getParameter());
+}
+
+void RenderEngine::translateObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vector3D oldF, Vector3D newF, int axisPos) {
+	Ray r1(oldC, oldF-oldC);
+	world->translateObject(pos, t0, oldC, newC, oldF, newF, axisPos);
+}
+
+void RenderEngine::scaleObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vector3D oldF, Vector3D newF) {
+	Ray r1(oldC, oldF-oldC);
+	world->scaleObject(pos, t0, oldC, newC, oldF, newF);
 }

@@ -8,6 +8,9 @@
 #include "lightsource.h"
 #include "color.h"
 #include "sphere.h"
+#include "triangle.h"
+#include "cylinder.h"
+#include "quadric.h"
 #include "ray.h"
 
 class World
@@ -33,9 +36,31 @@ public:
 	{
 		objectList.push_back(obj);
 	}
-	float firstIntersection(Ray& ray);
+	Object * firstIntersection(Ray& ray);
+	int findIntersection(Ray& r1);
 	Color shade_ray(Ray& ray);
 	const std::vector<LightSource *> &getLightSourceList() const { return lightSourceList; }
+
+	void drawObjects(GLint vVertex_attrib, GLint vColor_attrib, GLint vNormal_attrib);
+	void translateObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vector3D oldF, Vector3D newF, int axisBox);
+	void scaleObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vector3D oldF, Vector3D newF);
+	void changeColor(int pos, Color nc) { 
+		objectList[pos]->getMaterial()->color.r = nc.r;
+		objectList[pos]->getMaterial()->color.g = nc.g;
+		objectList[pos]->getMaterial()->color.b = nc.b;
+		if ((int)objectList[pos]->getExtendedVertices().size() == 93276) {
+			(dynamic_cast<Sphere *>(objectList[pos]))->drawShape(objectList[pos]->getMaterial());
+		}
+		else if ((int)objectList[pos]->getExtendedVertices().size() == 9) {
+			(dynamic_cast<Triangle *>(objectList[pos]))->drawShape(objectList[pos]->getMaterial());
+		}
+		else if ((int)objectList[pos]->getExtendedVertices().size() == 6444) {
+			(dynamic_cast<Quadric *>(objectList[pos]))->drawShape(objectList[pos]->getMaterial());
+		}
+		else {
+			
+		}
+	}
 };
 
 #endif

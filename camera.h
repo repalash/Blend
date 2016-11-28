@@ -26,6 +26,10 @@ public:
 	~Camera();
 	const Vector3D get_ray_direction(const float i, const float j) const;
 	const Vector3D& get_position() const { return position; }
+	const Vector3D& get_target() const { return target; }
+	const Vector3D& get_up() const { return up; }
+	const float get_aspect() const { return aspect; }
+	const float get_fovy() const { return fovy; }
 	void drawPixel(int i, int j, Color c);
 	unsigned char * getBitmap() {return bitmap; }
 	int getWidth() {return width;}

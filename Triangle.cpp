@@ -2,6 +2,27 @@
 
 #include "triangle.h"
 
+void Triangle::drawShape(Material* mat) {
+	expandedVertices.clear();
+	expandedColors.clear();
+	expandedNormals.clear();
+	for (int i = 0; i < 3; i++)	expandedVertices.push_back(a[i]);
+	for (int i = 0; i < 3; i++)	expandedVertices.push_back(b[i]);
+	for (int i = 0; i < 3; i++)	expandedVertices.push_back(c[i]);	
+
+	for (int i = 0; i < 3; i++)	{
+		expandedColors.push_back(mat->color.r);
+		expandedColors.push_back(mat->color.g);
+		expandedColors.push_back(mat->color.b);
+	}
+
+	for (int i = 0; i < 3; i++)	{
+		expandedNormals.push_back(aN[0]);
+		expandedNormals.push_back(aN[1]);
+		expandedNormals.push_back(aN[2]);
+	}
+}
+
 bool Triangle::intersect(Ray &r) const {
 	Vector3D e1, e2;
 	Vector3D N, T;
