@@ -196,10 +196,10 @@ int init_resources(void)
 //	Object *quadric2 = new Quadric(0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, m2);
 //	world->addObject(quadric2);
 
-	Object *quadric3 = new Quadric(Vector3D(0,0,0), 0.3, 0, 0.3, 0, 0, 0, 0, 0, 0, -1, false, m5);
-	world->addObject(quadric3);
-	Object *quadric4 = new Quadric(Vector3D(0,0,0), 0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, true, m5);
-	world->addObject(quadric4);
+	// Object *quadric3 = new Quadric(Vector3D(0,0,0), 0.3, 0, 0.3, 0, 0, 0, 0, 0, 0, -1, false, m5);
+	// world->addObject(quadric3);
+	// Object *quadric4 = new Quadric(Vector3D(0,0,0), 0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, true, m5);
+	// world->addObject(quadric4);
 
 //	Object *triangle = new Triangle(Vector3D(0, 10, -15), Vector3D(-8, 0, -18), Vector3D(8, 0, -18), m3);
 //	world->addObject(triangle);
@@ -222,13 +222,13 @@ int init_resources(void)
 	world->addObject(planeTriangle7);
 	Object *planeTriangle8 = new Triangle(Vector3D(-6, -10, 20), Vector3D(-6, -10, -20), Vector3D(-6, 10, -20), mPlane);
 	world->addObject(planeTriangle8);
-//
+
 //	Object *planeTriangle9 = new Triangle(Vector3D(50, 5, 25), Vector3D(-50, 5, 25), Vector3D(50, 5, -50), mPlane4);
 //	world->addObject(planeTriangle9);
 //	Object *planeTriangle10 = new Triangle(Vector3D(50, 5, -50), Vector3D(-50, 5, 25), Vector3D(-50, 5, -50), mPlane4);
 //	world->addObject(planeTriangle10);
 
-	LightSource *light = new PointLightSource(world, Vector3D(0, 20, 10), Color(10,10,10));
+	LightSource *light = new PointLightSource(world, Vector3D(0, 20, 10), Color(30,30,30));
 	world->addLight(light);
 
 //	LightSource *light2 = new PointLightSource(world, Vector3D(0, 10, 10), Color(20, 20, 20));
@@ -337,10 +337,12 @@ void onKey(unsigned char key, int x, int y)
 			break;
 		case 'r': 
 			camera->resetSteps();
+			engine->setStartPos(0);
 			engine->setRenderFlag(true);
 			break;
 		case 'R': 
 			camera->resetSteps();
+			engine->setStartPos(0);
 			engine->setRenderFlag(true);
 			break;
 		case 'e': engine->setRenderFlag(false);

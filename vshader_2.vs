@@ -28,6 +28,7 @@ varying float fShadingFlag;
 
 void main(void) {
 
+
 	gl_Position = vProjection * vView * vModel * vec4(vVertex, 1.0);
 	fShadingFlag = 1.0;
 	fVertexPosition = (vView * vModel * vec4(vVertex, 1.0)).xyz;
@@ -39,6 +40,7 @@ void main(void) {
 		fLightPositionCameraSpace[src] = (vView * vec4(vLightPosition[src], 1.0)).xyz + vec3(10.0, 10.0, 10.0) - (vView * vModel * vec4(vVertex, 1.0)).xyz;
 		fLightPositionCameraSpace[src] = normalize(fLightPositionCameraSpace[src]);
 		fLightColor[src] = vLightColor[src];
+		fLightColor[src] = vec3(1, 1, 1);
 		fVertexLightDistance[src] = length(fVertexPosition - vLightPosition[src]);
 	}
 	// fKa = vKa;

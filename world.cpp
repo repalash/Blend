@@ -24,6 +24,7 @@ float World::firstIntersection(Ray& ray)
 }
 
 int World::findIntersection(Ray &r1) {
+	cout << "Finding intersection" << endl;
 	const int obSz = (int)objectList.size();
 	vector <pair < pair < float, float >, pair < float, int > > > sortObjs;
 	for (int i = 0; i<(int)objectList.size(); i++) {

@@ -7,7 +7,7 @@ compile:
 	g++ -o main.out main.cpp shader_utils.cpp gl_utils.cpp camera.cpp vector3D.cpp world.cpp sphere.cpp triangle.cpp quadric.cpp renderengine.cpp color.cpp ray.cpp material.cpp pointlightsource.cpp ${CPPFLAGS} ${LDFLAGS} -std=c++11
 
 run: compile
-	./main.out 640 480
+	./main.out 900 600
 
 clean:
 	rm -f main.out

@@ -12,23 +12,23 @@ const Color RenderEngine::trace(const float i, const float j)
 
 bool RenderEngine::renderLoop()
 {
-	static int i = 0;
+	// static int i = 0;
 #pragma omp parallel for schedule(dynamic, 5)
 	for(int j = 0; j<camera->getHeight(); j++)
 	{
 		Color color(0);
 		for(int p =0; p<SAMPLE; p++){
 			for(int q=0; q<SAMPLE; q++){
-				color = color + trace((const float) (i + (p + xorshf96()) / SAMPLE), (const float) (j + (q + xorshf96()) / SAMPLE));
+				color = color + trace((const float) (startPos + (p + xorshf96()) / SAMPLE), (const float) (j + (q + xorshf96()) / SAMPLE));
 			}
 		}
 		color = color / (SAMPLE*SAMPLE);
 		color.clamp();
-		camera->drawPixel(i, j, color);
+		camera->drawPixel(startPos, j, color);
 	}
-	if(++i == camera->getWidth())
+	if(++startPos == camera->getWidth())
 	{
-		i = 0;
+		startPos = 0;
 		camera->incSteps();
 		std::cout<<"Samples Done: "<<camera->getSteps()*SAMPLE*SAMPLE<<std::endl;
 		return false;

@@ -15,10 +15,14 @@ private:
 	const Color trace(const float i, const float j);
 	bool renderFlag;
 	int SAMPLE;
+	int startPos;
 
 public:
 	RenderEngine(World *_world, Camera *_camera, int _SAMPLE):
-		world(_world), camera(_camera), SAMPLE(_SAMPLE) {}
+		world(_world), camera(_camera), SAMPLE(_SAMPLE) {
+			startPos = 0;
+		}
+	void setStartPos(int x) { startPos = x;};
 	bool renderLoop();
 	void setRenderFlag(bool flag) { renderFlag = flag;};
 	bool getRenderFlag() { return renderFlag; };

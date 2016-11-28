@@ -39,6 +39,8 @@ public:
 	void resetSteps(){ 
 		delete []bitmap;
 		bitmap  = new unsigned char[width * height * 3 * sizeof(unsigned char)]; //RGB
+		for (int i = 0; i < width*height*3; i++)
+			bitmap[i] = 0;
 		steps=0; 
 	}
 	int getSteps() const {
