@@ -1,5 +1,6 @@
 //quadric.cpp
 
+#include <iostream>
 #include "quadric.h"
 
 // bool Quadric::intersect(Ray &r) const {

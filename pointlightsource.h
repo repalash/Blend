@@ -11,5 +11,6 @@ public:
 	PointLightSource(World *_world, const Vector3D& _pos, const Color& _intensity):
 		LightSource(_world, _intensity), position(_pos) {}
 	Vector3D getPosition() const {return position;}
+	void getPosition(Vector3D pos) const {position = pos;}
 };
 #endif

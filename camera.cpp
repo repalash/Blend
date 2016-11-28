@@ -1,5 +1,6 @@
 #include "camera.h"
 #include <math.h>
+#include <iostream>
 
 Camera::Camera(const Vector3D& _pos, const Vector3D& _target, const Vector3D& _up, float _fovy, int _width, int _height) : 
 position(_pos), target(_target), up(_up), fovy(_fovy), width(_width), height(_height)
@@ -7,6 +8,8 @@ position(_pos), target(_target), up(_up), fovy(_fovy), width(_width), height(_he
 	up.normalize();
 
 	line_of_sight = target - position;
+
+	steps = 0;
 
 	//Calculate the camera basis vectors
 	//Camera looks down the -w axis
@@ -46,7 +49,7 @@ const Vector3D Camera::get_ray_direction(const float i, const float j) const
 void Camera::drawPixel(int i, int j, Color c)
 {
 	int index = (i + j*width)*3;
-	bitmap[index + 0] = (unsigned char) (255 * c.r);
-	bitmap[index + 1] = (unsigned char) (255 * c.g);
-	bitmap[index + 2] = (unsigned char) (255 * c.b);
-}
+	bitmap[index + 0] = (unsigned char) ((bitmap[index + 0] * steps + 255 * c.r) / (steps + 1));
+	bitmap[index + 1] = (unsigned char) ((bitmap[index + 1] * steps + 255 * c.g) / (steps + 1));
+	bitmap[index + 2] = (unsigned char) ((bitmap[index + 2] * steps + 255 * c.b) / (steps + 1));
+	}
