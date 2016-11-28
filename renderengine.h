@@ -4,6 +4,8 @@
 #include "world.h"
 #include "camera.h"
 #include "material.h"
+#include <iostream>
+using namespace std;
 
 class RenderEngine
 {

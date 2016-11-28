@@ -12,8 +12,6 @@
 
 #ifdef __APPLE__
 	#include <OpenGL/gl3.h>
-#else
-	#include <GL/gl.h>
 #endif
 
 class Object
@@ -24,9 +22,9 @@ protected:
 	LightSource* lightSource;
 	bool isMovement;
 
-	std::vector < GLfloat > expandedVertices;
-	std::vector < GLfloat > expandedColors;
-	std::vector < GLfloat > expandedNormals;
+	std::vector < float > expandedVertices;
+	std::vector < float > expandedColors;
+	std::vector < float > expandedNormals;
 
 public:
 	Object(Material *mat): material(mat) {
@@ -40,15 +38,16 @@ public:
 	virtual Vector3D getPosition() const {
 		return Vector3D(0, 0, 0);
 	}
-	virtual void setLightSource(Color color){
-		lightSource = new PointLightSource(world, Vector3D(0,0,0), color);
-	};
+	virtual void setLightSource(LightSource * ls)
+	{
+		 lightSource = ls;
+	}
 	bool isLightSource() const { return lightSource!=nullptr; };
 	const LightSource* getLightSource() const { return lightSource; };
 
-	std::vector < GLfloat > getExtendedVertices() { return expandedVertices; }
-	std::vector < GLfloat > getExtendedColors() { return expandedColors; }
-	std::vector < GLfloat > getExtendedNormals() { return expandedNormals; }
+	std::vector < float > getExtendedVertices() { return expandedVertices; }
+	std::vector < float > getExtendedColors() { return expandedColors; }
+	std::vector < float > getExtendedNormals() { return expandedNormals; }
 	Material* getMaterial() { return material;}
 	bool getIsMovement() { return isMovement; };
 	// virtual void foo() {};

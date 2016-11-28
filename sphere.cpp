@@ -5,8 +5,8 @@
 
 void Sphere::drawShape(Material* mat) {
 	const int nVertices = 3*72*72, exnVertices = 71*72*2*3 + 3*70 + 3*70;
-	GLfloat sphere_vertices[nVertices];
-	GLfloat sphere_colors[nVertices];
+	float sphere_vertices[nVertices];
+	float sphere_colors[nVertices];
 
 	for (int u = 0, ctr = 0; u < 360; u += 5) {
 		for (int v = 0; v < 360; v += 5) {
@@ -19,7 +19,7 @@ void Sphere::drawShape(Material* mat) {
 			sphere_colors[ctr++] = mat->color.r; sphere_colors[ctr++] = mat->color.g; sphere_colors[ctr++] = mat->color.b;
 		}
 	}
-	GLushort sphere_indices[exnVertices];
+	unsigned int sphere_indices[exnVertices];
 	int idx = 0;
 	for (int u = 0; u < 71; u += 1) {
 		for (int v = 0; v < 72; v +=1) {

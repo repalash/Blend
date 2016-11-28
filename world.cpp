@@ -1,5 +1,9 @@
 #include <iostream>
 #include "world.h"
+#include "sphere.h"
+#include "quadric.h"
+#include "Triangle.h"
+
 #define GLM_FORCE_RADIANS
 #define GLM_SWIZZLE
 #include <glm/gtc/type_ptr.hpp>
@@ -70,7 +74,7 @@ void World::translateObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vec
 		(dynamic_cast<Sphere *>(objectList[pos]))->changePosition(m, pos2-pos1);
 	}
 	else if ((int)objectList[pos]->getExtendedVertices().size() == 9) {
-		(dynamic_cast<Triangle *>(objectList[pos]))->changePosition(m, pos2-pos1); 
+		(dynamic_cast<Triangle *>(objectList[pos]))->changePosition(m, pos2-pos1);
 	}
 	else if ((int)objectList[pos]->getExtendedVertices().size() == 6444)
 		(dynamic_cast<Quadric *>(objectList[pos]))->changePosition(m, pos2-pos1); 
@@ -121,9 +125,14 @@ Color World::shade_ray(Ray& ray)
 	return background;
 }
 
-void World::addLight(Object* ls) {
-	if(!ls->isLightSource()) return;
-	lightSourceList.push_back((LightSource *const &) ls->getLightSource());
+void World::addLight(LightSource* ls) {
+	Material *m = new Material(this);
+	m->ka = 1;
+	m->color = Color(ls->getIntensity());
+	Sphere *sphere = new Sphere(ls->getPosition(), 8, m);
+	sphere->setLightSource(ls);
+	lightSourceList.push_back(ls);
+	addObject(sphere);
 }
 
 void drawObject(Object * obj, GLint vVertex_attrib, GLint vColor_attrib, GLint vNormal_attrib) {
@@ -187,3 +196,23 @@ void World::drawObjects(GLint vVertex_attrib, GLint vColor_attrib, GLint vNormal
 		}
 	}
 }
+
+void World::changeColor(int pos, Color nc) 	{
+	objectList[pos]->getMaterial()->color.r = nc.r;
+	objectList[pos]->getMaterial()->color.g = nc.g;
+	objectList[pos]->getMaterial()->color.b = nc.b;
+	if ((int)objectList[pos]->getExtendedVertices().size() == 93276) {
+		(dynamic_cast<Sphere *>(objectList[pos]))->drawShape(objectList[pos]->getMaterial());
+	}
+	else if ((int)objectList[pos]->getExtendedVertices().size() == 9) {
+		(dynamic_cast<Triangle *>(objectList[pos]))->drawShape(objectList[pos]->getMaterial());
+	}
+	else if ((int)objectList[pos]->getExtendedVertices().size() == 6444) {
+		(dynamic_cast<Quadric *>(objectList[pos]))->drawShape(objectList[pos]->getMaterial());
+	}
+	else {
+
+	}
+}
+
+

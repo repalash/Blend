@@ -41,8 +41,8 @@
 void Quadric::drawShape(Material* mat) {
 	cout << "DRAW CYLINDER" << endl;
 	const int nVertices = 3*2*180, exnVertices = 1*180*2*3 + 3*178 + 3*178;
-	GLfloat cyl_vertices[nVertices];
-	GLfloat cyl_colors[nVertices];
+	float cyl_vertices[nVertices];
+	float cyl_colors[nVertices];
 
 	for (int u = 0, ctr = 0; u < 10; u+=9) {
 		for (int v = 0; v < 360; v += 2) {
@@ -58,7 +58,7 @@ void Quadric::drawShape(Material* mat) {
 		}
 	}
 
-	GLushort cyl_indices[exnVertices];
+	unsigned int cyl_indices[exnVertices];
 	int idx = 0;
 	for (int u = 0; u < 1; u += 1) {
 		for (int v = 0; v < 180; v +=1) {

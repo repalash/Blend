@@ -14,8 +14,6 @@ using namespace std;
 
 #ifdef __APPLE__
 	#include <OpenGL/gl3.h>
-#else
-	#include <GL/gl.h>
 #endif
 
 class Sphere : public Object
@@ -48,11 +46,6 @@ public:
 			radius = radius+scaleF;
 			drawShape(mat);
 		}
-	}
-
-	virtual void setLightSource(Color color) override {
-		Object::setLightSource(color);
-		lightSource->setPosition(position);
 	}
 
 };
