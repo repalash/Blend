@@ -40,6 +40,7 @@ public:
 	void translateObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vector3D oldF, Vector3D newF, int axisBox);
 	void scaleObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vector3D oldF, Vector3D newF);
 	void changeColor(int pos, Color nc);
+	void changeMaterial(int pos, float kr, int kt, float eta, int phongn);
 };
 
 #endif

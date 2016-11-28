@@ -32,5 +32,6 @@ public:
 	void scaleObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vector3D oldF, Vector3D newF);
 	void setSamples(int _nsample) { SAMPLE = _nsample; };
 	void changeColor(int pos, Color nc) { world->changeColor(pos, nc); };
+	void changeMaterial(int pos, float kr, int kt, float eta, int phongn) { world->changeMaterial(pos, kr, kt, eta, phongn); };
 };
 #endif

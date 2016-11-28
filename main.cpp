@@ -319,7 +319,7 @@ void SaveImage()  //TODO:
 	fprintf(stderr, "Image saved as: %s\n", imageName);
 }
 
-bool scaleFlag = false, translateFlag = false, addSphereFlag = false, changeColorFlag = false;
+bool scaleFlag = false, translateFlag = false, addSphereFlag = false, changeColorFlag = false, changeMaterialFlag = false;
 bool isDragging = false;
 int currentX, currentY, oldX, oldY;
 pair < int, float > checkObjectPos = make_pair(-1, -1);
@@ -405,11 +405,11 @@ void onMouseButton(int button, int state, int x, int y)
 			else if (addSphereFlag) {
 				Vector3D initDir = Vector3D(r22[0], r22[1], r22[2]) - Vector3D(r11[0], r11[1], r11[2]);
 				initDir.normalize();
-				Vector3D initPos = Vector3D(r11[0], r11[1], r11[2]) + 10*(initDir);
+				Vector3D initPos = Vector3D(r11[0], r11[1], r11[2]) + camera->get_position()[2]*(initDir);
 				cout << initPos[0] << " " << initPos[1] << " " << initPos[2] << endl;
 				initPos[2] = 0;
  				Material *m = new Material(world);
-				m->color = Color(redBoxValue/255.0, greenBoxValue/255.0, blueBoxValue/255.0); m->ka = 0.2; m->kd = 1; m->ks = 0.1; m->katt = 0.005; m->kr = 0.; m->n = 128; m->kt = 0;
+				m->color = Color(redBoxValue/255.0, greenBoxValue/255.0, blueBoxValue/255.0); m->ka = 0.2; m->kd = 1; m->ks = 0.0; m->katt = 0.005; m->kr = krBoxVaue; m->n = phongnBoxVaue; m->kt = ktBoxVaue; m->eta = etaBoxVaue;
 				Object *sphere = new Sphere(initPos, 2, m);
 				world->addObject(sphere);
 				addSphereFlag = false;
@@ -419,6 +419,13 @@ void onMouseButton(int button, int state, int x, int y)
 				checkObjectPos = engine->checkIntersect(Vector3D(r11[0], r11[1], r11[2]), Vector3D(r22[0], r22[1], r22[2]));
 				if (checkObjectPos.first != -1)  {
 					engine->changeColor(checkObjectPos.first, Color(redBoxValue/255.0, greenBoxValue/255.0, blueBoxValue/255.0));
+					glutPostRedisplay();
+				}
+			}
+			else if (changeMaterialFlag) {
+				checkObjectPos = engine->checkIntersect(Vector3D(r11[0], r11[1], r11[2]), Vector3D(r22[0], r22[1], r22[2]));
+				if (checkObjectPos.first != -1)  {
+					engine->changeMaterial(checkObjectPos.first, krBoxVaue, ktBoxVaue, etaBoxVaue, phongnBoxVaue);
 					glutPostRedisplay();
 				}
 			}
@@ -509,6 +516,7 @@ void glui_cb1(int control) {
 		addSphereFlag = false;
 		translateFlag = true;
 		changeColorFlag = false;
+		changeMaterialFlag = false;
 	}
 	cout << "Translate option selected" << endl;
 }
@@ -519,6 +527,7 @@ void glui_cb2(int control) {
 		addSphereFlag = false;
 		translateFlag = false;
 		changeColorFlag = false;
+		changeMaterialFlag = false;
 	}
 	cout << "Scale option selected" << endl;
 }
@@ -529,6 +538,7 @@ void glui_cb3(int control) {
 		scaleFlag = false;
 		translateFlag = false;
 		changeColorFlag = false;
+		changeMaterialFlag = false;
 	}
 	cout << "Sphere added" << endl;
 }
@@ -539,8 +549,20 @@ void glui_cb4(int control) {
 		scaleFlag = false;
 		translateFlag = false;
 		changeColorFlag = true;
+		changeMaterialFlag = false;
 	}
 	cout << "Change color" << endl;
+}
+
+void glui_cb5(int control) {
+	if (!engine->getRenderFlag()) {
+		addSphereFlag = false;
+		scaleFlag = false;
+		translateFlag = false;
+		changeColorFlag = false;
+		changeMaterialFlag = true;
+	}
+	cout << "Change material" << endl;
 }
 
 GLUI_Spinner * redSpin, * greenSpin, * blueSpin;
@@ -568,6 +590,7 @@ void widgets(int majorWindow) {
  	subwindow1->add_radiobutton_to_group(group1, "Z" );
 	GLUI_Button * button2 = subwindow1->add_button_to_panel (panel1, "Scale", -1, glui_cb2);
 	GLUI_Button * button4 = subwindow1->add_button_to_panel (panel1, "Change Color", -1, glui_cb4);
+	GLUI_Button * button5 = subwindow1->add_button_to_panel (panel1, "Change Material", -1, glui_cb5);
 
 	GLUI_Panel * panel2 = subwindow1->add_panel("Add Objects", GLUI_PANEL_EMBOSSED);
 	GLUI_Button * button3 = subwindow1->add_button_to_panel (panel2, "Sphere", -1, glui_cb3);

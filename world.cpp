@@ -216,4 +216,22 @@ void World::changeColor(int pos, Color nc) 	{
 	}
 }
 
+void World::changeMaterial(int pos, float kr, int kt, float eta, int phongn) {
+	objectList[pos]->getMaterial()->kr = kr;
+	objectList[pos]->getMaterial()->kt = kt;
+	objectList[pos]->getMaterial()->eta = eta;
+	objectList[pos]->getMaterial()->n = phongn;
+	if ((int)objectList[pos]->getExtendedVertices().size() == 93276) {
+		(dynamic_cast<Sphere *>(objectList[pos]))->drawShape(objectList[pos]->getMaterial());
+	}
+	else if ((int)objectList[pos]->getExtendedVertices().size() == 9) {
+		(dynamic_cast<Triangle *>(objectList[pos]))->drawShape(objectList[pos]->getMaterial());
+	}
+	else if ((int)objectList[pos]->getExtendedVertices().size() == 6444) {
+		(dynamic_cast<Quadric *>(objectList[pos]))->drawShape(objectList[pos]->getMaterial());
+	}
+	else {
+
+	}
+}
 

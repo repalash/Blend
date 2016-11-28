@@ -19,7 +19,7 @@ void main(void) {
 			halfBis = normalize(halfBis);
 
 			float normal_half_theta = max(0, dot(halfBis, normalize(fNormalCameraSpace)));
-			vec3 specularComp = vec3(0.5, 0.5, 0.5) * fLightColor[src] * pow(normal_half_theta, 256);
+			vec3 specularComp = vec3(0.0, 0.0, 0.0) * fLightColor[src] * pow(normal_half_theta, 256);
 
 			float fAtt = 0.0017 * fVertexLightDistance[src] * fVertexLightDistance[src];
 			
