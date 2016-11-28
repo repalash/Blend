@@ -41,3 +41,9 @@ Color operator / (const Color& c, double f)
 
 Color operator + (const Color& c1, const Color& c2)
 {return Color(c1.r+c2.r, c1.g+c2.g, c1.b+c2.b);}
+
+float Color::maxComponent() {
+    return (float) (r > g ? r > b ? r : b : g > b ? g : b);
+}
+
+

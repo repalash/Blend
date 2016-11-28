@@ -131,74 +131,114 @@ int init_resources(void)
 	}
 
 	//Initialize raytracer objects
-	Vector3D camera_position(0, 0, 10);
-	Vector3D camera_target(0, 0, 0); //Looking down -Z axis
+	Vector3D camera_position(0, 3, 16);
+	Vector3D camera_target(0,0,0); //Looking down -Z axis
 	Vector3D camera_up(0, 1, 0);
 	float camera_fovy =  45;
 	camera = new Camera(camera_position, camera_target, camera_up, camera_fovy, screen_width, screen_height);
 	//Create a world
-	
+
 	world = new World;
 	world->setAmbient(Color(1));
-	world->setBackground(Color(0.5, 0.8, 1));
+	world->setBackground(Color(0, 0, 0));
 
-	Material *m = new Material(world);
-	m->color = Color(1, 1, 1); m->ka = 0.; m->kd = 0.1; m->ks = 0.8; m->katt = 0.005; m->kr = 0.1; m->n = 128; m->eta = 1.4; m->kt = 1;
-	Material *m2 = new Material(world);
-	m2->color = Color(1, 1, 1); m2->ka = 0.1; m2->kd = 1; m2->ks = 0.; m2->katt = 0.005; m2->kr = 0.; m2->n = 128; m2->kt = 0.; m2->eta = 1.75;
-	Material *m3 = new Material(world);
-	m3->color = Color(1, 0., 0.0); m3->ka = 0.2; m3->kd = 1; m3->ks = 0.1; m3->katt = 0.005; m3->kr = 0.; m3->n = 128; m3->kt = 0;
+	Material *m = new Material(world); //diffuse red
+	m->color = Color(1, 0.25, .25); m->ka = 0.; m->kd = 0; m->ks = 0.8; m->katt = 0.005; m->kr = 0; m->n = 0; m->eta = 1.5; m->kt = 0;
+	Material *m2 = new Material(world); //specular
+	m2->color = Color(1, 0.65, 0.85); m2->ka = 0.1; m2->kd = 1; m2->ks = 0.; m2->katt = 0.005; m2->kr = 0.999; m2->n = 256; m2->kt = 0; m2->eta = 1.4;
+	Material *m3 = new Material(world); //dielectric
+	m3->color = Color(1, 1, 1); m3->ka = 0.2; m3->kd = 1; m3->ks = 0.1; m3->katt = 0.005; m3->kr = 0.2; m3->n = 128; m3->kt = 1; m3->eta = 1.33;
+	Material *m5 = new Material(world); //dielectric
+	m5->color = Color(1, 0.95, 0.95); m5->eta = 1.75; m5->kt=1;
+	Material *m4 = new Material(world); //glossy
+	m4->color = Color(1, 1, 0.23);  m4->n = 20;
 
 	Material *mPlane = new Material(world);
-	mPlane->color = Color(1, 1, 1); mPlane->kd = 0.9; mPlane->kr = 0.4; mPlane->katt = 0.003; mPlane->eta = 2;
+	mPlane->color = Color(0.25, 0.75, 0.25); mPlane->kr = 0;
+	Material *mPlane2 = new Material(world);
+	mPlane2->color = Color(0.25, 0.25, 0.75); mPlane2->kr = 0;
+	Material *mPlane3 = new Material(world);
+	mPlane3->color = Color(0.75, 0.25, 0.25); mPlane3->kr = 0;
+	Material *mPlane4 = new Material(world);
+	mPlane4->color = Color(0.67, 0.67, 0.67); mPlane4->kr = 0;
+
+//	world->addObject(new Sphere(Vector3D( 1e5+1,40.8,81.6), 1e5, m));
+//	world->addObject(new Sphere(Vector3D(-1e5+99,40.8,81.6), 1e5, m));
+//	world->addObject(new Sphere(Vector3D(50,40.8, 1e5),     1e5, m));
+//	world->addObject(new Sphere(Vector3D(50,40.8,-1e5+170), 1e5, m));
+//	world->addObject(new Sphere(Vector3D(50, 1e5, 81.6),    1e5, m));
+//	world->addObject(new Sphere(Vector3D(50,-1e5+81.6,81.6),1e5, m));
+//	world->addObject(new Sphere(Vector3D(27,16.5,47),       16 , m));
+//	world->addObject(new Sphere(Vector3D(73,16.5,78),       16 , m));
+//	world->addObject(new Sphere(Vector3D(50,681.6-.27,81.6),600, m));
 
 
-	Object *planeTriangle1 = new Triangle(Vector3D(-50, -5, 25), Vector3D(50, -5, 25), Vector3D(50, -5, -50), mPlane);
-	world->addObject(planeTriangle1);
-	Object *planeTriangle2 = new Triangle(Vector3D(-50, -5, 25), Vector3D(50, -5, -50), Vector3D(-50, -5, -50), mPlane);
-	world->addObject(planeTriangle2);
+//	Object *sphere = new Sphere(Vector3D(3, -2, -6), 3, m2);
+//	world->addObject(sphere);
+////
+	Object *sphere5 = new Sphere(Vector3D(0, -4, 0), 0.7, m4);
+	world->addObject(sphere5);
+////
+//	Object *sphere2 = new Sphere(Vector3D(-3.5, -3, 3.6), 1.6, m5);
+//	world->addObject(sphere2);
 
-//	Object *planeTriangle3 = new Triangle(Vector3D(10, -10, 0), Vector3D(10, 10, 0), Vector3D(10, 10, -15), mPlane);
-//	world->addObject(planeTriangle3);
-//	Object *planeTriangle4 = new Triangle(Vector3D(10, -10, -15), Vector3D(10, -10, 0), Vector3D(10, 10, -15), mPlane);
-//	world->addObject(planeTriangle4);
-
-	// Object *cyl1 = new Cylinder(Vector3D(0, 0, 0), 2, m3);
-	// world->addObject(cyl1);
-
-	Object *sphere1 = new Sphere(Vector3D(4, 0, -8), 3, m3);
-	world->addObject(sphere1);
-
-	Object *sphere2 = new Sphere(Vector3D(-6, 0, -5), 3, m2);
-	world->addObject(sphere2);
-
-	// Object *quadric1 = new Quadric(Vector3D(0, 0, 0), 0.3, 0, 0.3, 0, 0, 0, 0, 0, 0, -1, false, m2);
-	// world->addObject(quadric1);
-
-	Object *sphere3 = new Sphere(Vector3D(-2, 0, -5), 5, m2);
-	world->addObject(sphere3);
+//	Object *sphere4 = new Sphere(Vector3D(-1, -2, -12), 3, m4);
+//	world->addObject(sphere4);
+//
+//	Object *sphere3 = new Sphere(Vector3D(-2, -3.5, -5), 1.5, m2);
+//	world->addObject(sphere3);
 
 //	Object *sphere2 = new Sphere(Vector3D(2, 1.5, -5), 1.4, m2);
 //	world->addObject(sphere2);
 
-//	Object *quadric = new Quadric(1, 0, 1, 0, 0, 0, 0, 0, 0, -1, m2);
+//	Object *quadric = new Quadric(0.1, 1, 0.1, 0, 0, 0, 0, 0, 0, -1, true, m3);  //water, sort of..
 //	world->addObject(quadric);
+//	Object *quadric2 = new Quadric(0.099, 0, 0.099, 0, 0, 0, 0, 0, 0, -1, true, m2);
+//	Object *quadric2 = new Quadric(0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, m2);
+//	world->addObject(quadric2);
+
+	Object *quadric3 = new Quadric(0.3, 0, 0.3, 0, 0, 0, 0, 0, 0, -1, false, m5);
+	world->addObject(quadric3);
+	Object *quadric4 = new Quadric(0.1, 0, 0.1, 0, 0, 0, 0, 0, 0, -1, true, m5);
+	world->addObject(quadric4);
 
 //	Object *triangle = new Triangle(Vector3D(0, 10, -15), Vector3D(-8, 0, -18), Vector3D(8, 0, -18), m3);
 //	world->addObject(triangle);
 
-	
+	Object *planeTriangle1 = new Triangle(Vector3D(-50, -5, 25), Vector3D(50, -5, 25), Vector3D(50, -5, -50), mPlane2);
+	world->addObject(planeTriangle1);
+	Object *planeTriangle2 = new Triangle(Vector3D(-50, -5, 25), Vector3D(50, -5, -50), Vector3D(-50, -5, -50), mPlane2);
+	world->addObject(planeTriangle2);
 
-	LightSource *light = new PointLightSource(world, Vector3D(0, 10, 0), Color(1, 1, 1));
-	world->addLight(light);
-	LightSource *light2 = new PointLightSource(world, Vector3D(10, 10, -5), Color(1, 1, 1));
-	world->addLight(light2);
-	// LightSource *light3 = new PointLightSource(world, Vector3D(-8, 0, 0), Color(0.2, 0, 0));
-	// world->addLight(light3);
-	// LightSource *light4 = new PointLightSource(world, Vector3D(0, 0, 0), Color(1, 1, 1));
-	// world->addLight(light4);
-//	LightSource *light4 = new PointLightSource(world, Vector3D(6, 4, -8), Color(1, 1, 1));
-//	world->addLight(light4);
+	Object *planeTriangle3 = new Triangle(Vector3D(50, 25, -10), Vector3D(-50, 25, -10), Vector3D(50, -6, -10), mPlane4);
+	world->addObject(planeTriangle3);
+	Object *planeTriangle4 = new Triangle(Vector3D(50, -6, -10), Vector3D(-50, 25, -10), Vector3D(-50, -6, -10), mPlane4);
+	world->addObject(planeTriangle4);
+
+	Object *planeTriangle5 = new Triangle(Vector3D(6, -10, 20), Vector3D(6, 10, 20), Vector3D(6, 10, -20), mPlane3);
+	world->addObject(planeTriangle5);
+	Object *planeTriangle6 = new Triangle(Vector3D(6, -10, -20), Vector3D(6, -10, 20), Vector3D(6, 10, -20), mPlane3);
+	world->addObject(planeTriangle6);
+	Object *planeTriangle7 = new Triangle(Vector3D(-6, 10, 20), Vector3D(-6, -10, 20), Vector3D(-6, 10, -20), mPlane);
+	world->addObject(planeTriangle7);
+	Object *planeTriangle8 = new Triangle(Vector3D(-6, -10, 20), Vector3D(-6, -10, -20), Vector3D(-6, 10, -20), mPlane);
+	world->addObject(planeTriangle8);
+//
+//	Object *planeTriangle9 = new Triangle(Vector3D(50, 5, 25), Vector3D(-50, 5, 25), Vector3D(50, 5, -50), mPlane4);
+//	world->addObject(planeTriangle9);
+//	Object *planeTriangle10 = new Triangle(Vector3D(50, 5, -50), Vector3D(-50, 5, 25), Vector3D(-50, 5, -50), mPlane4);
+//	world->addObject(planeTriangle10);
+
+	Sphere *light = new Sphere(Vector3D(0, 20, 10), 4, m);
+	light->setLightSource(Color(10,10,10));
+	world->addObject(light);
+
+//	LightSource *light2 = new PointLightSource(world, Vector3D(0, 10, 10), Color(20, 20, 20));
+//	world->addLight(light2);
+
+//	LightSource *light3 = new PointLightSource(world, Vector3D(-8, 0, 0), Color(0.2, 0, 0));
+//	world->addLight(light3);
+	engine = new RenderEngine(world, camera);
 
 
 	setupLightPosition(world->getLightSourceList());
@@ -353,12 +393,12 @@ void onMouseButton(int button, int state, int x, int y)
 			glm::vec4 resultCoordFarPlane = camera2world * glm::vec4(2.0*x/screen_width - 1.0, 1.0 - 2.0*y/screen_height, 1.0, 1.0);
 			glm::vec3 r11(resultCoordNearPlane[0]/resultCoordNearPlane[3], resultCoordNearPlane[1]/resultCoordNearPlane[3], resultCoordNearPlane[2]/resultCoordNearPlane[3]);
 			glm::vec3 r22(resultCoordFarPlane[0]/resultCoordFarPlane[3], resultCoordFarPlane[1]/resultCoordFarPlane[3], resultCoordFarPlane[2]/resultCoordFarPlane[3]);
-			
+
 			if (translateFlag || scaleFlag) {
 				checkObjectPos = engine->checkIntersect(Vector3D(r11[0], r11[1], r11[2]), Vector3D(r22[0], r22[1], r22[2]));
 				if (checkObjectPos.first != -1) {
 					isDragging = true;
-				}	
+				}
 			}
 			else if (addSphereFlag) {
 				Vector3D initDir = Vector3D(r22[0], r22[1], r22[2]) - Vector3D(r11[0], r11[1], r11[2]);
@@ -409,7 +449,7 @@ void onIdle(void)
 	if (engine->getRenderFlag()) {
 		if(!done)
 		{
-			for(int i=0; i < screen_width/50; i++)
+			for(int i=0; i < screen_width/10; i++)
 				if(engine->renderLoop())
 				{
 					done = true;
@@ -526,16 +566,16 @@ void widgets(int majorWindow) {
  	subwindow1->add_radiobutton_to_group(group1, "Z" );
 	GLUI_Button * button2 = subwindow1->add_button_to_panel (panel1, "Scale", -1, glui_cb2);
 	GLUI_Button * button4 = subwindow1->add_button_to_panel (panel1, "Change Color", -1, glui_cb4);
-	
-	GLUI_Panel * panel2 = subwindow1->add_panel("Add Objects", GLUI_PANEL_EMBOSSED);	
-	GLUI_Button * button3 = subwindow1->add_button_to_panel (panel2, "Sphere", -1, glui_cb3);	
 
-	GLUI_Panel * panel3 = subwindow1->add_panel("Color", GLUI_PANEL_EMBOSSED);	
+	GLUI_Panel * panel2 = subwindow1->add_panel("Add Objects", GLUI_PANEL_EMBOSSED);
+	GLUI_Button * button3 = subwindow1->add_button_to_panel (panel2, "Sphere", -1, glui_cb3);
+
+	GLUI_Panel * panel3 = subwindow1->add_panel("Color", GLUI_PANEL_EMBOSSED);
 	redSpin = subwindow1->add_spinner_to_panel(panel3, "Red", GLUI_SPINNER_INT, NULL, 0, updateRedBox); redSpin->set_int_limits(0, 255, GLUI_LIMIT_CLAMP);
 	greenSpin = subwindow1->add_spinner_to_panel(panel3, "Green", GLUI_SPINNER_INT, NULL, 0, updateGreenBox); greenSpin->set_int_limits(0, 255, GLUI_LIMIT_CLAMP);
 	blueSpin = subwindow1->add_spinner_to_panel(panel3, "Blue", GLUI_SPINNER_INT, NULL, 0, updateBlueBox); blueSpin->set_int_limits(0, 255, GLUI_LIMIT_CLAMP);
-	
-	GLUI_Panel * panel4 = subwindow1->add_panel("Material", GLUI_PANEL_EMBOSSED);	
+
+	GLUI_Panel * panel4 = subwindow1->add_panel("Material", GLUI_PANEL_EMBOSSED);
 	krSpin = subwindow1->add_spinner_to_panel(panel4, "kr", GLUI_SPINNER_FLOAT, NULL, 0, updateKrBox); krSpin->set_float_limits(0.0, 1.0, GLUI_LIMIT_CLAMP);
 	ktSpin = subwindow1->add_spinner_to_panel(panel4, "kt", GLUI_SPINNER_INT, NULL, 0, updateKtBox); ktSpin->set_int_limits(0, 1, GLUI_LIMIT_CLAMP);
 	etaSpin = subwindow1->add_spinner_to_panel(panel4, "eta", GLUI_SPINNER_FLOAT, NULL, 0, updateEtaBox); etaSpin->set_float_limits(0.0, 100, GLUI_LIMIT_CLAMP);
@@ -544,7 +584,7 @@ void widgets(int majorWindow) {
 
 	GLUI_Panel * panel5 = subwindow1->add_panel("Parameters", GLUI_PANEL_EMBOSSED);
 	numSamplesSpin = subwindow1->add_spinner_to_panel(panel5, "nSamples", GLUI_SPINNER_INT, NULL, 0, updatenSampleBox); numSamplesSpin->set_int_limits(1, 30, GLUI_LIMIT_CLAMP);
-		
+
 }
 
 int main(int argc, char* argv[])
@@ -556,12 +596,12 @@ int main(int argc, char* argv[])
 		screen_width -= (screen_width % 2); //Make it even
 		screen_height -= (screen_height % 2); //Make it even
 	}
-	fprintf(stderr, "Welcome to Lumina raytracer.\nFull command: %s [width] [height]\nPress 's' to save framebufer to disk.\n", argv[0]);
+	fprintf(stderr, "Welcome to Blend pathtracer and editor.\nFull command: %s [width] [height]\nPress 's' to save framebufer to disk.\n", argv[0]);
 	/* Glut-related initialising functions */
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutInitWindowSize(screen_width, screen_height);
-	int majorWindow =  glutCreateWindow("Assignment 4: Raytracing");
+	int majorWindow =  glutCreateWindow("Blend: Pathtracer and editor");
 #ifndef __APPLE__
 	GLenum glew_status = glewInit();
 	if(glew_status != GLEW_OK)
@@ -606,8 +646,8 @@ void setupLightPosition(std::vector<LightSource *> lightSourceList) {
 			exit(0);
 		}
 		glUniform3f(vLightPosition_uniform[i], lightSourceList[i]->getPosition()[0], lightSourceList[i]->getPosition()[1], lightSourceList[i]->getPosition()[2]);
-	} 
-}	
+	}
+}
 
 void setupLightColor(std::vector<LightSource *> lightSourceList) {
 	glUseProgram(program2);
@@ -621,8 +661,8 @@ void setupLightColor(std::vector<LightSource *> lightSourceList) {
 			exit(0);
 		}
 		glUniform3f(vLightColor_uniform[i], lightSourceList[i]->getIntensity().r, lightSourceList[i]->getIntensity().g, lightSourceList[i]->getIntensity().b);
-	} 
-}	
+	}
+}
 
 void setupModelTransformation()
 {
@@ -635,21 +675,21 @@ void setupModelTransformation()
 		fprintf(stderr, "Could not bind location: vModel\n");
 		exit(0);
 	}
-	glUniformMatrix4fv(vModel_uniform, 1, GL_FALSE, glm::value_ptr(modelT)); 
+	glUniformMatrix4fv(vModel_uniform, 1, GL_FALSE, glm::value_ptr(modelT));
 }
 
 void setupViewTransformation(Vector3D position, Vector3D target, Vector3D up)
 {
 	//Viewing transformations (World -> Camera coordinates
 	viewT = glm::lookAt(glm::vec3(position[0], position[1], position[2]), glm::vec3(target[0], target[1], target[2]), glm::vec3(up[0], up[1], up[2]));
-	
+
 	glUseProgram(program2);
 	vView_uniform = glGetUniformLocation(program2, "vView");
 	if(vView_uniform == -1){
 		fprintf(stderr, "Could not bind location: vView\n");
 		exit(0);
 	}
-	glUniformMatrix4fv(vView_uniform, 1, GL_FALSE, glm::value_ptr(viewT)); 
+	glUniformMatrix4fv(vView_uniform, 1, GL_FALSE, glm::value_ptr(viewT));
 }
 
 void setupProjectionTransformation(float aspect, float fovy)
@@ -663,5 +703,5 @@ void setupProjectionTransformation(float aspect, float fovy)
 		fprintf(stderr, "Could not bind location: vProjection\n");
 		exit(0);
 	}
-	glUniformMatrix4fv(vProjection_uniform, 1, GL_FALSE, glm::value_ptr(projectionT)); 
+	glUniformMatrix4fv(vProjection_uniform, 1, GL_FALSE, glm::value_ptr(projectionT));
 }

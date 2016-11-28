@@ -30,6 +30,7 @@ public:
     double r;
     double g;
     double b;
-    
+
+    float maxComponent();
 };
 #endif

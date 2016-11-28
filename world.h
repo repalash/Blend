@@ -1,7 +1,7 @@
 #ifndef _WORLD_H_
 #define _WORLD_H_
 
-#define MAX_LEVEL 20
+#define MAX_LEVEL 10
 
 #include <vector>
 #include "object.h"
@@ -31,10 +31,11 @@ public:
 	void setAmbient(const Color& amb) {ambient = amb;}
 	Color getAmbient() {return ambient;}
 
-	void addLight(LightSource* ls);
+	void addLight(Object* ls);
 	void addObject(Object *obj)
 	{
 		objectList.push_back(obj);
+		addLight(obj);
 	}
 	Object * firstIntersection(Ray& ray);
 	int findIntersection(Ray& r1);

@@ -23,12 +23,14 @@ protected:
 	LightSource* lightSource;
 	bool isMovement;
 
-	std::vector < GLfloat > expandedVertices; 
-	std::vector < GLfloat > expandedColors; 
-	std::vector < GLfloat > expandedNormals; 
+	std::vector < GLfloat > expandedVertices;
+	std::vector < GLfloat > expandedColors;
+	std::vector < GLfloat > expandedNormals;
 
 public:
-	Object(Material *mat): material(mat) {}	
+	Object(Material *mat): material(mat) {
+		lightSource = nullptr;
+	}
 	virtual bool intersect(Ray& ray) const = 0;
 	virtual Color shade(const Ray& ray) const
 	{
@@ -37,7 +39,9 @@ public:
 	virtual Vector3D getPosition() const {
 		return Vector3D(0, 0, 0);
 	}
-	void setLightSource(LightSource *ls){ lightSource = ls; }
+	virtual void setLightSource(Color color){
+		lightSource = new PointLightSource(world, Vector3D(0,0,0), color);
+	};
 	bool isLightSource() const { return lightSource!=nullptr; };
 	const LightSource* getLightSource() const { return lightSource; };
 

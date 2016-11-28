@@ -31,7 +31,6 @@ public:
 	{
 		isSolid = true;
 		isMovement = true;
-		lightSource = nullptr;
 		drawShape(mat);
 	}
 
@@ -50,5 +49,11 @@ public:
 			drawShape(mat);
 		}
 	}
+
+	virtual void setLightSource(Color color) override {
+		Object::setLightSource(color);
+		lightSource->setPosition(position);
+	}
+
 };
 #endif
