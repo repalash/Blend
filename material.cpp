@@ -90,8 +90,8 @@ Color Material::shade(const Ray& incident, const bool isSolid) const
 		Vector3D v=crossProduct(w,u);
 		Vector3D dDirection = u*cos(alpha)*sineTheta + v*sin(alpha)*sineTheta + w*sqrt(z) ;
 		Ray randomRay = Ray(incident.getPosition(), dDirection, incident.getLevel() + 1);  //Ideal reflection
-		if(kg>0)
-			return finalColor*world->shade_ray(randomRay) *(kg * pow(dotProduct(rDirection, dDirection), n)) * dotProduct(w, dDirection); //Glossy
+		if(n>0)
+			return finalColor*world->shade_ray(randomRay) *(1 * pow(dotProduct(rDirection, dDirection), n)) * dotProduct(w, dDirection); //Glossy
 		else
 			return finalColor*world->shade_ray(randomRay);
 	}else{

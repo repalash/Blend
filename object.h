@@ -8,6 +8,7 @@
 #include "color.h"
 #include "material.h"
 #include "lightsource.h"
+#include "pointlightsource.h"
 
 #ifdef __APPLE__
 	#include <OpenGL/gl3.h>

@@ -18,6 +18,97 @@ float World::firstIntersection(Ray& ray)
 	return ray.getParameter();
 }
 
+int World::findIntersection(Ray &r1) {
+	const int obSz = (int)objectList.size();
+	vector <pair < pair < float, float >, pair < float, int > > > sortObjs;
+	for (int i = 0; i<(int)objectList.size(); i++) {
+		float xCord = objectList[i]->getPosition()[0];
+		float yCord = objectList[i]->getPosition()[1];
+		float zCord = objectList[i]->getPosition()[2];
+		sortObjs.push_back(make_pair(make_pair(zCord, xCord), make_pair(yCord, i)));
+	}
+	sort(sortObjs.begin(), sortObjs.end());
+	reverse(sortObjs.begin(), sortObjs.end());
+
+	int objPos = -1;
+	for(int i1=0; i1<objectList.size(); i1++) {
+		int i = sortObjs[i1].second.second;
+		cout << "This : " << objectList[i]->getPosition()[2] << endl;
+		if (!objectList[i]->getIsMovement()) continue;
+		objectList[i]->intersect(r1);
+		if(r1.didHit()) {
+			return i;
+		}
+	}
+	return objPos;
+}
+
+void World::translateObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vector3D oldF, Vector3D newF, int axisPos) {
+	Material *m = objectList[pos]->getMaterial();
+	Vector3D d1 = oldF-oldC;
+	d1.normalize();
+	Vector3D d2 = newF-newC;
+	d2.normalize();
+	Vector3D pos1 = oldC + t0*d1;
+	Vector3D pos2 = newC + t0*d2;
+	if (axisPos == 0) {
+		pos1[1] = pos2[1] = 0;
+		pos1[2] = pos2[2] = 0;
+	}
+	else if (axisPos == 1) {
+		pos1[0] = pos2[0] = 0;
+		pos1[2] = pos2[2] = 0;
+	}
+	else {
+		pos1[2] = pos1[0];
+		pos2[2] = pos2[0];
+		pos1[0] = pos2[0] = 0;
+		pos1[1] = pos2[1] = 0;
+	}
+	if ((int)objectList[pos]->getExtendedVertices().size() == 93276) {
+		(dynamic_cast<Sphere *>(objectList[pos]))->changePosition(m, pos2-pos1);
+	}
+	else if ((int)objectList[pos]->getExtendedVertices().size() == 9) {
+		(dynamic_cast<Triangle *>(objectList[pos]))->changePosition(m, pos2-pos1); 
+	}
+	else if ((int)objectList[pos]->getExtendedVertices().size() == 6444)
+		(dynamic_cast<Quadric *>(objectList[pos]))->changePosition(m, pos2-pos1); 
+	else
+		return ;
+	cout << "TRANSLATING FOR : " << pos << " " << objectList[pos]->getPosition()[1] << " " << objectList[pos]->getPosition()[2] << endl;
+	cout << "Translating Object" << endl;
+}
+
+void World::scaleObject(int pos, float t0, Vector3D oldC, Vector3D newC, Vector3D oldF, Vector3D newF) {
+	Material *m = objectList[pos]->getMaterial();
+	Vector3D d1 = oldF-oldC;
+	d1.normalize();
+	Vector3D d2 = newF-newC;
+	d2.normalize();
+	Vector3D pos1 = oldC + t0*d1;
+	Vector3D pos2 = newC + t0*d2;
+	float dis = (pos2[0]-pos1[0])*(pos2[0]-pos1[0]) + (pos2[1]-pos1[1])*(pos2[1]-pos1[1]); 
+	dis = sqrt(dis);
+	int side = 1;
+	if (newC[0] < oldC[0])
+		side = -1;
+	else if (newC[0] == oldC[0] && newC[1] < oldC[1])
+		side = -1;
+	if ((int)objectList[pos]->getExtendedVertices().size() == 93276) {
+		(dynamic_cast<Sphere *>(objectList[pos]))->changeRadius(m, side*dis);
+	}
+	else if ((int)objectList[pos]->getExtendedVertices().size() == 9) {
+		(dynamic_cast<Triangle *>(objectList[pos]))->changeRadius(m, side*dis);
+	}
+	else if ((int)objectList[pos]->getExtendedVertices().size() == 6444)
+		(dynamic_cast<Quadric *>(objectList[pos]))->changeRadius(m, side*dis);
+	else
+		return ;
+	
+	// cout << "SCALING FOR : " << pos << " " << objectList[pos]->getPosition()[1] << " " << objectList[pos]->getPosition()[2] << endl;
+	cout << "Scaling Object" << endl;
+}
+
 Color World::shade_ray(Ray& ray)
 {
 	if(ray.getLevel() > MAX_LEVEL) return Color(ambient);
