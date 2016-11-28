@@ -14,6 +14,7 @@
 #include <OpenGL/gl3.h>
 #include <OpenGL/glu.h>
 #include <GLUT/glut.h>
+#include <GLUI/glui.h>
 #else
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -334,9 +335,13 @@ void onKey(unsigned char key, int x, int y)
 		case 'S': //Save to image
 			SaveImage();
 			break;
-		case 'r': engine->setRenderFlag(true);
+		case 'r': 
+			camera->resetSteps();
+			engine->setRenderFlag(true);
 			break;
-		case 'R': engine->setRenderFlag(true);
+		case 'R': 
+			camera->resetSteps();
+			engine->setRenderFlag(true);
 			break;
 		case 'e': engine->setRenderFlag(false);
 			displayCtr++;

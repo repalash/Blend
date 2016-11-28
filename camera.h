@@ -36,7 +36,11 @@ public:
 	int getWidth() {return width;}
 	int getHeight(){return height;}
 	void incSteps(){ steps++; }
-	void resetSteps(){ steps=0; }
+	void resetSteps(){ 
+		delete []bitmap;
+		bitmap  = new unsigned char[width * height * 3 * sizeof(unsigned char)]; //RGB
+		steps=0; 
+	}
 	int getSteps() const {
 		return steps;
 	}
