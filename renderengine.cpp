@@ -13,7 +13,7 @@ const Color RenderEngine::trace(const float i, const float j)
 bool RenderEngine::renderLoop()
 {
 	// static int i = 0;
-#pragma omp parallel for schedule(dynamic, 5)
+#pragma omp parallel for schedule(guided, 4)
 	for(int j = 0; j<camera->getHeight(); j++)
 	{
 		Color color(0);
